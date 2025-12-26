@@ -1,58 +1,48 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import {
-//   addFavoriteRecipe,
-//   removeFavoriteRecipe,
-// } from "../favoriteRecipes/favoriteRecipesSlice";
-// import { selectSearchTerm } from "../search/searchSlice";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../api/axiosInstance";
 
 export const loadWeather = createAsyncThunk(
-  "allRecipes/getAllRecipes",
-  async () => {
-    const data = await fetch("api/recipes?limit=10");
-    const json = await data.json();
-    return json;
+  "trackCurrentWeather/loadWeather",
+  async (arg, thunkAPI) => {
+    const response = await api.get("app/loadWeather", {
+      params: {
+        latitude: arg.latitude,
+        longitude: arg.longitude,
+      },
+    });
+    return response.data;
   }
 );
 
-const sliceOptions = {
-  name: "allRecipes",
+export const allWeatherSlice = createSlice({
+  name: "allWeather",
   initialState: {
-    recipes: [],
+    weather: [], // Ensure this matches the property you update below
     isLoading: false,
     hasError: false,
   },
   reducers: {},
-  extraReducers: {
-    [loadRecipes.pending]: (state, action) => {
-      // fill out function body
-      state.isLoading = true;
-      state.hasError = false;
-    },
-    [loadRecipes.fulfilled]: (state, action) => {
-      // fill out function body
-      state.isLoading = false;
-      state.hasError = false;
-      state.recipes = action.payload;
-    },
-    [loadRecipes.rejected]: (state, action) => {
-      // fill out function body
-      state.isLoading = false;
-      state.hasError = true;
-    },
+  // The Builder Callback is the required standard in 2025
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadWeather.pending, (state) => {
+        state.isLoading = true;
+        state.hasError = false;
+      })
+      .addCase(loadWeather.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.hasError = false;
+        state.weather = action.payload; // Fixed: Changed 'recipes' to 'weather'
+      })
+      .addCase(loadWeather.rejected, (state) => {
+        state.isLoading = false;
+        state.hasError = true;
+      });
   },
-};
+});
 
-export const allRecipesSlice = createSlice(sliceOptions);
+// Selector: Accesses the state.weather array defined in initialState
+export const selectAllWeather = (state) => state.allWeather.weather;
 
-export const selectAllRecipes = (state) => state.allRecipes.recipes;
-
-export const selectFilteredAllRecipes = (state) => {
-  const allRecipes = selectAllRecipes(state);
-  const searchTerm = selectSearchTerm(state);
-
-  return allRecipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-};
-
-export default allRecipesSlice.reducer;
+// Export the reducer (Fixed: used the correct slice name)
+export default allWeatherSlice.reducer;
