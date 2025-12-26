@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {
-  addFavoriteRecipe,
-  removeFavoriteRecipe,
-} from "../favoriteRecipes/favoriteRecipesSlice";
-import { selectSearchTerm } from "../search/searchSlice";
-export const loadRecipes = createAsyncThunk(
+// import {
+//   addFavoriteRecipe,
+//   removeFavoriteRecipe,
+// } from "../favoriteRecipes/favoriteRecipesSlice";
+// import { selectSearchTerm } from "../search/searchSlice";
+
+export const loadWeather = createAsyncThunk(
   "allRecipes/getAllRecipes",
   async () => {
     const data = await fetch("api/recipes?limit=10");
