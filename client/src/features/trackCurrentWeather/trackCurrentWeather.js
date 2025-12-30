@@ -17,7 +17,7 @@ export const loadWeather = createAsyncThunk(
 export const allWeatherSlice = createSlice({
   name: "allWeather",
   initialState: {
-    weather: [], // Ensure this matches the property you update below
+    weather: [], 
     isLoading: false,
     hasError: false,
   },
