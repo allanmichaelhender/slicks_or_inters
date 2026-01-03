@@ -22,7 +22,6 @@ export const allWeatherSlice = createSlice({
     hasError: false,
   },
   reducers: {},
-  // The Builder Callback is the required standard in 2025
   extraReducers: (builder) => {
     builder
       .addCase(loadWeather.pending, (state) => {
@@ -32,7 +31,7 @@ export const allWeatherSlice = createSlice({
       .addCase(loadWeather.fulfilled, (state, action) => {
         state.isLoading = false;
         state.hasError = false;
-        state.weather = action.payload; // Fixed: Changed 'recipes' to 'weather'
+        state.weather = action.payload;
       })
       .addCase(loadWeather.rejected, (state) => {
         state.isLoading = false;
@@ -41,8 +40,6 @@ export const allWeatherSlice = createSlice({
   },
 });
 
-// Selector: Accesses the state.weather array defined in initialState
 export const selectAllWeather = (state) => state.allWeather.weather;
 
-// Export the reducer (Fixed: used the correct slice name)
 export default allWeatherSlice.reducer;
